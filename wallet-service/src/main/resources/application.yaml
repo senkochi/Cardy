@@ -1,0 +1,35 @@
+server:
+  port: ${SERVER_PORT:8082}
+
+spring:
+  application:
+    name: wallet-service
+
+  datasource:
+    url: ${SUPA_URI}
+    username: ${SUPA_USERNAME}
+    password: ${SUPA_PASSWORD}
+    driver-class-name: org.postgresql.Driver
+    hikari:
+      initialization-fail-timeout: 0
+      connection-timeout: ${DB_CONNECTION_TIMEOUT:45000}
+      validation-timeout: ${DB_VALIDATION_TIMEOUT:5000}
+      leak-detection-threshold: ${DB_LEAK_DETECTION:2000}
+
+  jpa:
+    open-in-view: false
+    database-platform: org.hibernate.dialect.PostgreSQLDialect
+    hibernate:
+      ddl-auto: ${DDL_AUTO:update}
+    show-sql: ${SHOW_SQL:true}
+    properties:
+      hibernate:
+        default_schema: ${DB_SCHEMA:wallet}
+        format_sql: true
+        temp:
+          use_jdbc_metadata_defaults: false
+
+logging:
+  level:
+    org.springframework.security: ${SECURITY_LOG_LEVEL:trace}
+    org.springframework.jdbc: ${JDBC_LOG_LEVEL:debug}

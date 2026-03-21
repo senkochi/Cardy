@@ -1,0 +1,31 @@
+server:
+  port: 8081
+
+spring:
+  application:
+    name: flashcard-server
+  data:
+    mongodb:
+      uri: ${MONGO_URI}
+  security:
+    oauth2:
+      resourceserver:
+        jwt:
+          issuer-url: http://localhost:9000
+  cloud:
+    openfeign:
+      client:
+        config:
+          wallet-service:
+            url: http://localhost:8082
+          default:
+            connect-timeout: 10000
+            read-timeout: 10000
+
+logging:
+  level:
+    org.springframework.data.mongodb: DEBUG
+    org.mongodb.driver: DEBUG
+    org.springframework.web: DEBUG
+    org.springframework.security: DEBUG
+    com.cardy.flashcardServer: TRACE

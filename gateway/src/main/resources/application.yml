@@ -1,0 +1,32 @@
+#spring.application.name=gateway
+## Tr? ??n Config Server b?n v?a ch?y
+#spring.config.import=optional:configserver:http://localhost:8888
+## Tr? ??n Eureka Server
+#eureka.client.service-url.defaultZone=http://localhost:8761/eureka/
+
+spring:
+  application:
+    name: gateway-service
+  cloud:
+    config:
+      enabled: false
+  gateway:
+    x-forwarded:
+      for-enabled: true
+      proto-enabled: true
+      port-enabled: true
+      host-enabled: true
+    httpclient:
+      connect-timeout: 3000
+      response-timeout: 3s
+
+logging:
+  level:
+    org.springframework.cloud.gateway: TRACE
+    org.springframework.http.server.reactive: DEBUG
+
+eureka:
+  client:
+    enabled: false
+    register-with-eureka: false
+    fetch-registry: false
