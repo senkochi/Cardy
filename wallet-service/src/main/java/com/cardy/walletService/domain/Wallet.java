@@ -1,4 +1,4 @@
-package com.cardy.walletService.entity;
+package com.cardy.walletService.domain;
 
 import jakarta.persistence.*;
 import lombok.*;

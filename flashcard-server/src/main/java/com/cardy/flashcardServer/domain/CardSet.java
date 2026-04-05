@@ -1,4 +1,4 @@
-package com.cardy.flashcardServer.entity;
+package com.cardy.flashcardServer.domain;
 
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotBlank;

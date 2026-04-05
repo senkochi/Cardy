@@ -1,11 +1,11 @@
 package com.cardy.flashcardServer.service;
 
 import com.cardy.flashcardServer.client.WalletClient;
-import com.cardy.flashcardServer.dto.CardSetCreateReqDTO;
-import com.cardy.flashcardServer.dto.CardSetResDTO;
-import com.cardy.flashcardServer.dto.WalletReqDTO;
-import com.cardy.flashcardServer.entity.CardSet;
-import com.cardy.flashcardServer.entity.Purchase;
+import com.cardy.flashcardServer.dto.CardSetCreateDTO;
+import com.cardy.flashcardServer.dto.CardSetDTO;
+import com.cardy.flashcardServer.dto.WalletDTO;
+import com.cardy.flashcardServer.domain.CardSet;
+import com.cardy.flashcardServer.domain.Purchase;
 import com.cardy.flashcardServer.mapper.CardSetMapper;
 import com.cardy.flashcardServer.repository.CardSetRepository;
 import com.cardy.flashcardServer.repository.PurchaseRepository;
@@ -30,26 +30,26 @@ public class CardSetService {
     @Autowired
     private CardSetMapper mapper;
 
-    public CardSetResDTO create(CardSetCreateReqDTO req, String authorId){
+    public CardSetDTO create(CardSetCreateDTO req, String authorId){
         CardSet cardSet = mapper.toEntity(req);
         cardSet.setAuthorId(authorId);
         CardSet res = cardSetRepository.save(cardSet);
         return mapper.toDto(res);
     }
 
-    public List<CardSetResDTO> getAll(){
+    public List<CardSetDTO> getAll(){
         return mapper.toDtoList(cardSetRepository.findAll());
     }
 
-    public List<CardSetResDTO> getByAuthor(String authorId){
+    public List<CardSetDTO> getByAuthor(String authorId){
         return mapper.toDtoList(cardSetRepository.findByAuthorId(authorId));
     }
 
-    public CardSetResDTO getById(String id){
+    public CardSetDTO getById(String id){
         return mapper.toDto(cardSetRepository.findById(id).orElseThrow());
     }
 
-    public List<CardSetResDTO> getByKeyword(String keyword){
+    public List<CardSetDTO> getByKeyword(String keyword){
         return mapper.toDtoList(cardSetRepository.findByTitleContainingIgnoreCase(keyword));
     }
 
@@ -61,7 +61,7 @@ public class CardSetService {
             throw new IllegalStateException("Bạn đã sở hữu bộ thẻ này rồi");
         }
 
-        WalletReqDTO req = new WalletReqDTO(cardSet.getPrice(), cardSet.getTitle());
+        WalletDTO req = new WalletDTO(cardSet.getPrice(), cardSet.getTitle());
         String fullToken = "Bearer " + token;
 
         try{
@@ -82,9 +82,13 @@ public class CardSetService {
                     .build();
             purchaseRepository.save(purchase);
         } catch (Exception ex){
-            walletClient.deposit(token, new WalletReqDTO(cardSet.getPrice(), "Hoàn tiền lỗi hệ thống"));
+            walletClient.deposit(token, new WalletDTO(cardSet.getPrice(), "Hoàn tiền lỗi hệ thống"));
             throw new RuntimeException("Lỗi lưu trữ, đã hoàn lại tiền vào ví cho bạn!");
         }
+    }
+
+    public boolean isCardSetExists(String id){
+        return cardSetRepository.existsById(id);
     }
 
 }

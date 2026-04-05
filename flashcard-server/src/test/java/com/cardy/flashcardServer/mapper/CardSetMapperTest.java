@@ -1,11 +1,12 @@
 package com.cardy.flashcardServer.mapper;
 
-import com.cardy.flashcardServer.dto.CardSetResDTO;
-import com.cardy.flashcardServer.entity.CardSet;
+import com.cardy.flashcardServer.dto.CardSetDTO;
+import com.cardy.flashcardServer.domain.CardSet;
 import org.junit.jupiter.api.Test;
 import org.mapstruct.factory.Mappers;
 import static org.assertj.core.api.Assertions.assertThat;
 
+import java.math.BigDecimal;
 import java.util.Arrays;
 
 class CardSetMapperTest {
@@ -17,15 +18,15 @@ class CardSetMapperTest {
         entity.setId("123");
         entity.setTitle("Tiếng Nhật N5");
         entity.setDescription("Tiếng Nhật cơ bản cho người mới");
-        entity.setPrice(10.0);
+        entity.setPrice(BigDecimal.valueOf(10));
         entity.setCards(Arrays.asList(new CardSet.Card("One", "Một"), new CardSet.Card("Two", "Hai")));
 
-        CardSetResDTO cardSetResDTO = mapper.toDto(entity);
+        CardSetDTO cardSetResDTO = mapper.toDto(entity);
 
         assertThat(cardSetResDTO).isNotNull();
         assertThat(cardSetResDTO.getTitle()).isEqualTo("Tiếng Nhật N5");
         assertThat(cardSetResDTO.getDescription()).isEqualTo("Tiếng Nhật cơ bản cho người mới");
-        assertThat(cardSetResDTO.getPrice()).isEqualTo(10.0);
+        assertThat(cardSetResDTO.getPrice()).isEqualTo(BigDecimal.valueOf(10));
         assertThat(cardSetResDTO.getTotalCards()).isEqualTo(2);
     }
 }

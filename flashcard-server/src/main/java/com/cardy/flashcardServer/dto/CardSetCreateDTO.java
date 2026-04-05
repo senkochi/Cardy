@@ -1,6 +1,6 @@
 package com.cardy.flashcardServer.dto;
 
-import com.cardy.flashcardServer.entity.CardSet;
+import com.cardy.flashcardServer.domain.CardSet;
 import lombok.*;
 
 import java.util.List;
@@ -10,7 +10,7 @@ import java.util.List;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-public class CardSetCreateReqDTO {
+public class CardSetCreateDTO {
     private String title;
     private String description;
     private Double price;

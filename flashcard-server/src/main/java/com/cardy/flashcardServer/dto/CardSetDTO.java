@@ -9,7 +9,10 @@ import java.math.BigDecimal;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class WalletReqDTO {
-    private BigDecimal amount;
+public class CardSetDTO {
+    private String id;
+    private String title;
     private String description;
+    private BigDecimal price;
+    private Integer totalCards;
 }

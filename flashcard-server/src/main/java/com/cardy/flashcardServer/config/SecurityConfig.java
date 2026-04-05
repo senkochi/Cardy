@@ -3,6 +3,7 @@ package com.cardy.flashcardServer.config;
 import io.github.cdimascio.dotenv.Dotenv;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
@@ -24,7 +25,7 @@ public class SecurityConfig {
         http
                 .csrf(csrf -> csrf.disable()) // Quan trọng: Phải disable CSRF thì mới POST từ Postman được
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/api/flashcards/market").permitAll()
+                        .requestMatchers(HttpMethod.GET,"/api/flashcards").permitAll()
                         .anyRequest().authenticated() // Mở toang cửa cho tất cả các request
                 )
                 .oauth2ResourceServer(oauth2 -> oauth2

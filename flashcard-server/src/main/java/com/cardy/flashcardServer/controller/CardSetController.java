@@ -1,10 +1,12 @@
 package com.cardy.flashcardServer.controller;
 
-import com.cardy.flashcardServer.dto.CardSetCreateReqDTO;
-import com.cardy.flashcardServer.dto.CardSetResDTO;
-import com.cardy.flashcardServer.dto.WalletReqDTO;
+import com.cardy.flashcardServer.config.RabbitMQConfig;
+import com.cardy.flashcardServer.dto.CardSetCreateDTO;
+import com.cardy.flashcardServer.dto.CardSetDTO;
+import com.cardy.flashcardServer.dto.LearnProgressDTO;
 import com.cardy.flashcardServer.service.CardSetService;
 import jakarta.validation.Valid;
+import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -12,6 +14,7 @@ import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.oauth2.jwt.Jwt;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 @RestController
@@ -20,32 +23,35 @@ public class CardSetController {
     @Autowired
     private CardSetService cardSetService;
 
+    @Autowired
+    private RabbitTemplate rabbitTemplate;
+
     @PostMapping
-    public ResponseEntity<CardSetResDTO> create(
-            @Valid @RequestBody CardSetCreateReqDTO req,
+    public ResponseEntity<CardSetDTO> create(
+            @Valid @RequestBody CardSetCreateDTO req,
             @AuthenticationPrincipal Jwt jwt){
         String authorId = jwt.getSubject();
-        CardSetResDTO cardSet = cardSetService.create(req, authorId);
+        CardSetDTO cardSet = cardSetService.create(req, authorId);
         return ResponseEntity.status(HttpStatus.CREATED).body(cardSet);
     }
 
-    @GetMapping("/market")
-    public List<CardSetResDTO> getMarket(){
+    @GetMapping()
+    public List<CardSetDTO> getMarket(){
         return cardSetService.getAll();
     }
 
     @GetMapping("/author/{userId}")
-    public List<CardSetResDTO> getByAuthor(@PathVariable String userId){
+    public List<CardSetDTO> getByAuthor(@PathVariable String userId){
         return cardSetService.getByAuthor(userId);
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<CardSetResDTO> getById(@PathVariable String id){
+    public ResponseEntity<CardSetDTO> getById(@PathVariable String id){
         return ResponseEntity.ok(cardSetService.getById(id));
     }
 
     @GetMapping("/search")
-    public List<CardSetResDTO> search(@RequestParam String key) {
+    public List<CardSetDTO> search(@RequestParam String key) {
         return cardSetService.getByKeyword(key);
     }
 
@@ -57,5 +63,17 @@ public class CardSetController {
         String userId = jwt.getClaim("userId");
         cardSetService.buy(id, userId, jwt.getTokenValue());
         return ResponseEntity.ok("Đã mua thẻ thành công");
+    }
+
+    @PostMapping("/learn")
+    public ResponseEntity<?> sendProgress(@RequestBody LearnProgressDTO req){
+        boolean exists = cardSetService.isCardSetExists(req.getCardSetId());
+        if(!exists){
+            return ResponseEntity.badRequest().body("Cardset ID không tồn tại");
+        }
+
+        req.setCreatedAt(LocalDateTime.now());
+        rabbitTemplate.convertAndSend(RabbitMQConfig.LEARN_FANOUT_EXCHANGE, req);
+        return ResponseEntity.ok("Đã ghi nhận, tiến độ đang được xử lí");
     }
 }

@@ -2,8 +2,8 @@ package com.cardy.walletService.service;
 
 import com.cardy.walletService.dto.TransactionDTO;
 import com.cardy.walletService.dto.TransactionReqDTO;
-import com.cardy.walletService.entity.Transaction;
-import com.cardy.walletService.entity.Wallet;
+import com.cardy.walletService.domain.Transaction;
+import com.cardy.walletService.domain.Wallet;
 import com.cardy.walletService.enums.TransactionType;
 import com.cardy.walletService.repository.TransactionRepository;
 import com.cardy.walletService.repository.WalletRepository;

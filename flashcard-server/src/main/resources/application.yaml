@@ -21,6 +21,11 @@ spring:
           default:
             connect-timeout: 10000
             read-timeout: 10000
+  rabbitmq:
+    host: localhost
+    port: 5672
+    username: guest
+    password: guest
 
 logging:
   level:

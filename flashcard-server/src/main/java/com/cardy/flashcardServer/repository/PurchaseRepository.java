@@ -1,6 +1,6 @@
 package com.cardy.flashcardServer.repository;
 
-import com.cardy.flashcardServer.entity.Purchase;
+import com.cardy.flashcardServer.domain.Purchase;
 import org.springframework.data.mongodb.repository.MongoRepository;
 
 import java.util.List;

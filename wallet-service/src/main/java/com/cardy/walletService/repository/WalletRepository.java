@@ -1,6 +1,6 @@
 package com.cardy.walletService.repository;
 
-import com.cardy.walletService.entity.Wallet;
+import com.cardy.walletService.domain.Wallet;
 import jakarta.persistence.LockModeType;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Lock;

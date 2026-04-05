@@ -1,4 +1,4 @@
-package com.cardy.walletService.entity;
+package com.cardy.walletService.domain;
 
 import com.cardy.walletService.enums.TransactionType;
 import jakarta.persistence.*;

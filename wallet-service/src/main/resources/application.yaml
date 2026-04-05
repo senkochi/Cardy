@@ -29,6 +29,12 @@ spring:
         temp:
           use_jdbc_metadata_defaults: false
 
+  rabbitmq:
+    host: localhost
+    port: 5672
+    username: guest
+    password: guest
+
 logging:
   level:
     org.springframework.security: ${SECURITY_LOG_LEVEL:trace}
